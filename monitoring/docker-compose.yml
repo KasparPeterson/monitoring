@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ${PROMETHEUS_DATA}:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+
+  grafana:
+    image: grafana/grafana:8.2.1
+    restart: unless-stopped
+    user: "472"
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 80:3000
+    volumes:
+      - ./datasource.yml:/etc/grafana/provisioning/datasource.yml
+      - ${GRAFANA_DATA}:/var/lib/grafana
+    env_file:
+      - ./config.monitoring
+
+  loki:
+    image: grafana/loki:2.3.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - ${LOKI_DATA}:/loki
+    command: -config.file=/etc/loki/local-config.yaml
