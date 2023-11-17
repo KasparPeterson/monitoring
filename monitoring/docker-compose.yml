@@ -14,7 +14,7 @@ services:
       - "--storage.tsdb.retention.time=30d"
 
   grafana:
-    image: grafana/grafana:8.2.1
+    image: grafana/grafana:9.5.14
     restart: unless-stopped
     user: "472"
     container_name: grafana
