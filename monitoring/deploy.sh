@@ -10,5 +10,5 @@ else
 	exit 1
 fi
 
-docker-compose down
-docker-compose up --build --remove-orphans -d
+docker compose down
+docker compose up --build --remove-orphans -d
